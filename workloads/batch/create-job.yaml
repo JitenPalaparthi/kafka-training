@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: appjob
+  namespace: test
+  labels:
+    type: appjob
+spec:
+  completions: 5
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: appjob
+          image: jpalaparthi/appjob:v0.0.1

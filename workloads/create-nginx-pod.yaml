@@ -1,0 +1,42 @@
+# Simple nginx pod
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  namespace: test
+  labels:
+    app: nginx
+    type: test
+spec:
+  # Spec is the desired state
+  containers:
+    - name: nginx
+      image: nginx
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 80
+  
+# kubectl create -f create-nginx-pod.yaml
+# or
+# kubectl apply -f workloads/create-nginx-pod.yaml 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: test
+  labels:
+    app: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer
+# ClusterIP
+# NodePort
+# LoadBalancer
+
+

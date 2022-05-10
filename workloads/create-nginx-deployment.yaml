@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  namespace: test
+  labels:
+    type: nginx-deploy
+spec:
+  replicas: 20
+  revisionHistoryLimit: 20
+  strategy:
+    type: Recreate
+
+   # rollingUpdate:
+   #   maxSurge: 30%
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      #nodeName: minikube-m02
+      nodeSelector:
+        color: green
+        # kubectl label node minikube-m02 priority=1 color=blue
+      containers:
+        - name: nginx
+          image: nginx:perl
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 80
+          resources:
+             requests:
+              cpu: 100m
+              memory: 128Mi
