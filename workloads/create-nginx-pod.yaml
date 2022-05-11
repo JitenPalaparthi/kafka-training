@@ -34,9 +34,32 @@ spec:
   ports:
     - port: 80
       targetPort: 80
-  type: LoadBalancer
-# ClusterIP
-# NodePort
-# LoadBalancer
+  type: LoadBalancer 
+# --- 
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nginx
+#   labels:
+#     app: nginx
+# spec:
+#   ports:
+#   - port: 80
+#     name: web
+#   selector:
+#     app: nginx
+#   clusterIP: None
+
+# ClusterIP    : This particular service is exposed only inside the cluster
+# NodePort     : If external entity / webbrowser/external service or mobile devise anything outside of the cluser
+               # can communicate with the address of the node.The node should be accessable . The node must run on public ip/ url 
+               # You can access only if the service is deployed on that particular node.
+               # If the node dies/crashes then usually a new ip address is created by cloud providers and you cannot access the service
+               # NodePort has port limitation. If the service is NodePort then it assigns a port from 30000-32768.
+               # Kubernetes automatically assign the port on the node or you can manually give
+# LoadBalancer : There are different implementations by the cloud providers. Ultimately if you give it as a LoadBalancer 
+               # it returns an ip or url can acecss your service directly hitting that
+# Headless     : That means it is for StatefulSet. For the netwrok identification of state machines in StatefulSet
+               # To create headless service ClusterIP: None 
 
 

@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-config-3
+  namespace: test
+data:
+  deployment-type: production
+  deployment-version: v0.0.1
+  deployment-data.txt: | 
+    Some text
+binaryData:
+  deployment-data: SGVsbG8gRm9sa3MK
+
+# To encrypt  echo "Hello Folks" | base64
+# To decrypt echo "SGVsbG8gRm9sa3MK" | base64 -d
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-cm-consumer
+  namespace: test
+  labels:
+    app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    env:
+    - name: DEPLOYMENT-VERSION
+      valueFrom:
+        configMapKeyRef:
+          name:  kafka-config-3
+          key: deployment-version
+    volumeMounts:
+    - name: sample-volume
+      mountPath: /root
+
+  volumes:
+    - name: sample-volume
+      configMap:
+        name: kafka-config-3
+
+

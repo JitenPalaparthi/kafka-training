@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: appcronjob
+  namespace: test
+  labels:
+    type: appcronjob
+    app: appcronjob
+spec:
+  schedule: "23 9 * * *" # to schedule guidance https://crontab.guru/
+  failedJobsHistoryLimit: 10
+  startingDeadlineSeconds: 100
+  successfulJobsHistoryLimit: 20
+  jobTemplate:
+    metadata:
+      labels:
+        app: appcronjob
+    spec:
+      template:
+        metadata:
+          labels:
+            app: appcronjob
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: appcronjob
+              image: jpalaparthi/appjob:v0.0.1
+
+
+

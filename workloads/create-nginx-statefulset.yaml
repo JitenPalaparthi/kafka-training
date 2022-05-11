@@ -1,0 +1,93 @@
+# StatefulSet is useful if the pod is going to be state machine
+# E.g. Kafka Brokers, Mongosb Instances , any node/machine/pod that is part of a cluster (Not abt kubernetes cluster)
+# then StatefulSet is an ideal option
+# What you can obtain from StatefulSet 
+# Unique netwrok identifiers are stable.
+
+
+# Service documentation 
+# ClusterIP    : This particular service is exposed only inside the cluster
+# NodePort     : If external entity / webbrowser/external service or mobile devise anything outside of the cluser
+               # can communicate with the address of the node.The node should be accessable . The node must run on public ip/ url 
+               # You can access only if the service is deployed on that particular node.
+               # If the node dies/crashes then usually a new ip address is created by cloud providers and you cannot access the service
+               # NodePort has port limitation. If the service is NodePort then it assigns a port from 30000-32768.
+               # Kubernetes automatically assign the port on the node or you can manually give
+# LoadBalancer : There are different implementations by the cloud providers. Ultimately if you give it as a LoadBalancer 
+               # it returns an ip or url can acecss your service directly hitting that
+# Headless     : That means it is for StatefulSet. For the netwrok identification of state machines in StatefulSet
+               # To create headless service clusterIP: None  it means No vitual ip address
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: test
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+---
+# NodePort service to access nginx
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: test
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+    nodePort: 30101
+  type: NodePort
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-ss
+  namespace: test
+spec:
+  replicas: 5
+  serviceName: nginx # name of the headless service created for this StatefulSet
+  minReadySeconds: 20
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:perl
+        ports:
+        - name: web
+          containerPort: 80
+        volumeMounts:
+        - name: www
+          mountPath: /usr/local
+        
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: ["ReadWriteMany"]
+      resources:
+        requests:
+          storage: 2Gi
+
+            
+
+
+
+
+
