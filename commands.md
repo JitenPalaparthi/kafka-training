@@ -71,3 +71,11 @@
 ### Create namespace thru command
 
 ```kubectl create ns test```
+
+### To create a secret from command from literals
+
+```kubectl create secret generic db-creds -n test --from-literal=username=jiten --from-literal=password=jiten@123```
+
+### To create a secret from command with files
+
+```ubectl create secret generic db-creds-file  --from-file=username --from-file=password -n test```
