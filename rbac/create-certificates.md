@@ -18,7 +18,7 @@
 
 ```openssl x509 -req -in employee.csr -CA ~/.minikube/ca.crt -CAkey ~/.minikube/ca.key -CAcreateserial -out employee.crt -days 500```
 
-### Create credentials, context and user in .kube/config file 
+### Create credentials, context and user in kube-config file
 
 ```kubectl config set-credentials employee --client-certificate=/Users/jpalapar/employee/.certs/employee.crt  --client-key=/Users/jpalapar/employee/.certs/employee.key```
 
